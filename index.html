@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="main.js"></script>
+  <title>Kalkulator</title>
+</head>
+<body>
+  <main class="calculator">
+    <div class="calculate__output"></div>
+    <div class="calculator__input"></div>
+    
+    <form class="calculator__form">
+      <div class="input-row">
+        <button type="submit" class="calculator__btn" style="--color: rgb(75, 255, 246)" data-action="clear">AC</button>
+        <button type="submit" class="calculator__btn" style="--color: rgb(75, 255, 246)" data-action="idk">+/-</button>
+        <button type="submit" class="calculator__btn" style="--color: rgb(75, 255, 246)" data-action="dev" data-value="%">%</button>
+        <button type="submit" class="calculator__btn" style="--color: rgb(75, 255, 246)" data-action="rest" data-value="÷">÷</button>
+      </div>
+      <div class="input-row">
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="7">7</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="8">8</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="9">9</button>
+        <button type="submit" class="calculator__btn" style="--color: #F00" data-action="multi" data-value="x">x</button>
+      </div>
+      <div class="input-row">
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="4">4</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="5">5</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="6">6</button>
+        <button type="submit" class="calculator__btn" style="--color: #F00" data-action="sub" data-value="-">-</button>
+      </div>
+      <div class="input-row">
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="1">1</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="2">2</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="3">3</button>
+        <button type="submit" class="calculator__btn" style="--color: #F00" data-action="add" data-value="+">+</button>
+      </div>
+      <div class="input-row">
+        <button type="submit" class="calculator__btn hidden"></button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value="0">0</button>
+        <button type="submit" class="calculator__btn" style="--color: #F4F4F4" data-value=",">.</button>
+        <button type="submit" class="calculator__btn" style="--color: #F00" data-action="calculate">=</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>
