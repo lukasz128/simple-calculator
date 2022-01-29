@@ -1,26 +1,41 @@
-const input = document.querySelector('.calculator__input');
-const output = document.querySelector('.calculate__output');
+const output = document.querySelector('.calculator__output');
 const form = document.querySelector('.calculator__form');
 let values = [];
 
 document.addEventListener('DOMContentLoaded', app);
 
 function app() {
-
-  form.addEventListener('submit', event => {
+  
+  form.addEventListener('submit', event =>  {
     event.preventDefault();
     const action = event.submitter.dataset.action;
     const value = event.submitter.dataset.value;
     const hasFieldValue = value !== undefined;
     const hasFieldAction = (action !== undefined && action !== 'calculate' && action !== 'clear');
+    let signIndex;
+    
+    if(action === 'calculate') {
+      calculate();
+      return;
+    }
+    
+    values.push({value, isAction: hasFieldAction});
+    if(action === 'clear') {
+      setOutput('');
+      values = [];
+    };
 
-    (action === 'calculate') && calculate();
-    (action === 'clear') && clearInput();
+    console.log(values);
 
-    if(hasFieldValue) {
-      values.push({value, isAction: hasFieldAction});
-      setInput(values.map(({value}) => value ).join(" "));
-    } 
+    if(hasFieldAction) {
+      signIndex = values.length-1;
+    }
+    
+    if(signIndex) {
+      setOutput(values.slice(signIndex));
+    } else {
+      setOutput(values);
+    }
   });
 
 }
@@ -32,15 +47,14 @@ const calculate = () => {
   const [firstNumber, secondNumber] = getComponenets();
 
   switch(action) {
-    case '+': setOutput(`= ${firstNumber + secondNumber}`); break;
-    case '-': setOutput(`${values.map(({value}) => value ).join(" ")} = ${firstNumber - secondNumber}`); break;
-    case '*': setOutput(`${values.map(({value}) => value ).join(" ")} = ${firstNumber * secondNumber}`); break;
-    case '/': setOutput(`${values.map(({value}) => value ).join(" ")} = ${firstNumber / secondNumber}`); break;
+    case '+': setOutput(`${firstNumber + secondNumber}`); break;
+    case '-': setOutput(`${firstNumber - secondNumber}`); break;
+    case '*': setOutput(`${firstNumber * secondNumber}`); break;
+    case '/': setOutput(`${firstNumber / secondNumber}`); break;
   }
 };
-const setInput = value => input.innerHTML = value;
-const setOutput = value => output.innerHTML = value;
-const resetInput = () => input.innerHTML = '';
+const setOutput = values =>
+  output.textContent = Array.isArray(values) ? values.filter( ({isAction}) => !isAction).map( ({value}) => value).join('') : values;
 
 function buildOperations(operations) {
   [... operations].forEach(console.log);

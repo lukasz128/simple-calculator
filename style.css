@@ -1,5 +1,10 @@
 :root {
   --first-color: #333;
+  --second-color: #F4F4F4;
+  --primary-action-color: #F00;
+  --second-action-color: rgb(75, 255, 246);
+  --button-size: 60px;
+  --border-radius-size: 10px;
 }
 
 * {
@@ -11,33 +16,43 @@ body {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
-.calculator {
+.calculator__container {
   height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .calculator__output {
-  
+  text-align: right;
+  font-size: 30px;
+  min-height: 40px;
+  margin-right: 5px;
 }
 
-.calculator__form {
-  
-}
 
 .calculator__btn {
   background-color: var(--first-color);
-  width: 35px;
-  height: 35px;
-  margin: 5px;
+  width: var(--button-size);
+  height: var(--button-size);
+  padding: 5px;
   color: var(--color);
   font-weight: bold;
   outline: none;
   border: none;
   box-shadow: 0 0 5px var(--first-color);
   cursor: pointer;
+  user-select: none;
+  border: 1px solid var(--second-color);
+}
+
+.calculator__btn:hover,
+.calculator__btn:focus {
+  filter: brightness(90%);
+}
+
+.calculator__btn--bigger {
+  flex: 2;
 }
 
 .input-row {
@@ -46,6 +61,18 @@ body {
   align-items: baseline;
 }
 
-.hidden {
-  visibility: hidden;
+.input-row:first-child > button:first-child {
+  border-top-left-radius: var(--border-radius-size);
+}
+
+.input-row:first-child > button:last-child {
+  border-top-right-radius: var(--border-radius-size);
+}
+
+.input-row:last-child > button:first-child {
+  border-bottom-left-radius: var(--border-radius-size);
+}
+
+.input-row:last-child > button:last-child {
+  border-bottom-right-radius: var(--border-radius-size);
 }
