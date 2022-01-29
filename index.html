@@ -17,14 +17,14 @@
         <div class="input-row">
           <button type="submit" class="calculator__btn" (click)="event.preventDefault()" style="--color: var(--second-action-color)" data-action="clear">AC</button>
           <button type="submit" class="calculator__btn" style="--color: var(--second-action-color)" data-action="idk">+/-</button>
-          <button type="submit" class="calculator__btn" style="--color: var(--second-action-color)" data-action="dev" data-value="%">%</button>
-          <button type="submit" class="calculator__btn" style="--color: var(--primary-action-color)" data-action="rest" data-value="÷">÷</button>
+          <button type="submit" class="calculator__btn" style="--color: var(--second-action-color)" data-action="dev" data-value="/">%</button>
+          <button type="submit" class="calculator__btn" style="--color: var(--primary-action-color)" data-action="rest" data-value="%">÷</button>
         </div>
         <div class="input-row">
           <button type="submit" class="calculator__btn" style="--color: var(--second-color)" data-value="7">7</button>
           <button type="submit" class="calculator__btn" style="--color: var(--second-color)" data-value="8">8</button>
           <button type="submit" class="calculator__btn" style="--color: var(--second-color)" data-value="9">9</button>
-          <button type="submit" class="calculator__btn" style="--color: var(--primary-action-color)" data-action="multi" data-value="x">x</button>
+          <button type="submit" class="calculator__btn" style="--color: var(--primary-action-color)" data-action="multi" data-value="*">x</button>
         </div>
         <div class="input-row">
           <button type="submit" class="calculator__btn" style="--color: var(--second-color)" data-value="4">4</button>
@@ -40,7 +40,7 @@
         </div>
         <div class="input-row">
           <button type="submit" class="calculator__btn calculator__btn--bigger" style="--color: var(--second-color)" data-value="0">0</button>
-          <button type="submit" class="calculator__btn" style="--color: var(--second-color)" data-value=",">.</button>
+          <button type="submit" class="calculator__btn" style="--color: var(--second-color)" data-value=".">.</button>
           <button type="submit" class="calculator__btn" style="--color: var(--primary-action-color)" data-action="calculate">=</button>
         </div>
       </form>

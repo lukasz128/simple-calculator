@@ -23,11 +23,15 @@ body {
   align-items: center;
 }
 
+.calculator {
+}
+
 .calculator__output {
   text-align: right;
   font-size: 30px;
   min-height: 40px;
   margin-right: 5px;
+  overflow: hidden;
 }
 
 

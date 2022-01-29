@@ -1,18 +1,16 @@
 const output = document.querySelector('.calculator__output');
 const form = document.querySelector('.calculator__form');
 let values = [];
+let signIndex;
 
-document.addEventListener('DOMContentLoaded', app);
+const domEventRef = document.addEventListener('DOMContentLoaded', app);
 
 function app() {
-  
-  form.addEventListener('submit', event =>  {
+  const submitEventRef = form.addEventListener('submit', event =>  {
     event.preventDefault();
     const action = event.submitter.dataset.action;
     const value = event.submitter.dataset.value;
-    const hasFieldValue = value !== undefined;
     const hasFieldAction = (action !== undefined && action !== 'calculate' && action !== 'clear');
-    let signIndex;
     
     if(action === 'calculate') {
       calculate();
@@ -20,46 +18,61 @@ function app() {
     }
     
     values.push({value, isAction: hasFieldAction});
-    if(action === 'clear') {
-      setOutput('');
-      values = [];
-    };
-
+    (action === 'clear') && clearField();
     console.log(values);
-
-    if(hasFieldAction) {
-      signIndex = values.length-1;
-    }
-    
-    if(signIndex) {
-      setOutput(values.slice(signIndex));
-    } else {
-      setOutput(values);
-    }
+    setSignIndex(hasFieldAction);
+    signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
   });
 
+  const keyUpEventRef = window.addEventListener('keyup', ({key: value, isTrusted}) => {
+    const hasFieldAction = /[+-/*//%]/.test(value);
+    const hasFieldValue = /[0-9.,+-/*%//]/.test(value);
+    // TODO add . and ,
+    if(isTrusted) {
+      if(value === 'Enter') {
+        calculate();
+        return;
+      }
+      
+      hasFieldValue && values.push({value, isAction: hasFieldAction});
+      (value === 'Backspace') && clearField();
+      setSignIndex(hasFieldAction);
+      signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
+    }
+  })
+
+  document.removeEventListener('submit', submitEventRef);
+  document.removeEventListener('keyup', keyUpEventRef);
 }
 
-const clearInput = () => input.innerHTML = '';
-const clearAllField = () => input.innerHTML = '';
 const calculate = () => {
-  const action = values.find( ({isAction}) => isAction).value;
-  const [firstNumber, secondNumber] = getComponenets();
-
-  switch(action) {
-    case '+': setOutput(`${firstNumber + secondNumber}`); break;
-    case '-': setOutput(`${firstNumber - secondNumber}`); break;
-    case '*': setOutput(`${firstNumber * secondNumber}`); break;
-    case '/': setOutput(`${firstNumber / secondNumber}`); break;
+  try {
+    const action = values.find( ({isAction}) => isAction).value;
+    const [firstNumber, secondNumber] = getComponenets();
+    let answer;
+    // TODO exception when is only one number without action
+    switch(action) {
+      case '+': answer = firstNumber + secondNumber; break;
+      case '-': answer = firstNumber - secondNumber; break;
+      case '*': answer = firstNumber * secondNumber; break;
+      case '/': {
+        if(secondNumber == 0) throw Error('cant devide by zero');
+        answer = firstNumber / secondNumber;
+      } break;
+      case '%': answer = firstNumber % secondNumber; break;
+    }
+    setOutput(answer.toFixed(2));
+    resetVariables();
+    [... answer.toString()].forEach(value => values.push({value, isAction: false}));
+  } catch(errorMessage) {
+    console.error(errorMessage);
+    setOutput('Error');
+    resetVariables();
   }
 };
+
 const setOutput = values =>
   output.textContent = Array.isArray(values) ? values.filter( ({isAction}) => !isAction).map( ({value}) => value).join('') : values;
-
-function buildOperations(operations) {
-  [... operations].forEach(console.log);
-}
-
 
 const getComponenets = () => {
   let index = 0;
@@ -69,3 +82,20 @@ const getComponenets = () => {
     return components;
   }, ['', '']).map( component => Number.parseFloat(component));
 }
+
+const resetVariables = () => {
+  signIndex = null;
+  values = [];
+}
+
+const setSignIndex = isExistSign => {
+  isExistSign && (signIndex = values.length-1);
+}
+
+const clearField = () => {
+  setOutput('');
+  resetVariables();
+}
+
+
+document.removeEventListener('DOMContentLoaded', domEventRef);
