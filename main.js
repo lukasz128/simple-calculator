@@ -27,10 +27,8 @@ function app() {
   });
 
   const keyUpEventRef = window.addEventListener('keyup', ({key: value, isTrusted}) => {
-    const hasFieldAction = /[+-/*//%]/.test(value);
-    console.log("hasFieldAction", hasFieldAction);
-    const hasFieldValue = /[0-9\..,+-/*%//]/.test(value);
-    // TODO add . and ,
+    const hasFieldAction = /[+-]|[//]|[/*]|[/%]{1}/.test(value);
+    const hasFieldValue = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(value);
     if(isTrusted) {
       if(value === 'Enter') {
         calculate();
