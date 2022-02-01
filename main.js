@@ -2,11 +2,12 @@ const output = document.querySelector('.calculator__output');
 const form = document.querySelector('.calculator__form');
 let values = [];
 let signIndex;
+let hasBeenCalculated = false;
 
 const domEventRef = document.addEventListener('DOMContentLoaded', app);
 
 function app() {
-  const submitEventRef = form.addEventListener('submit', event =>  {
+  const submitEventRef = form.addEventListener('submit', event => {
     event.preventDefault();
     const action = event.submitter.dataset.action;
     const value = event.submitter.dataset.value;
@@ -16,7 +17,8 @@ function app() {
       calculate();
       return;
     }
-    
+
+    resetValues(hasFieldAction);   
     values.push({value, isAction: hasFieldAction});
     (action === 'clear') && clearField();
     console.log(values);
@@ -26,7 +28,8 @@ function app() {
 
   const keyUpEventRef = window.addEventListener('keyup', ({key: value, isTrusted}) => {
     const hasFieldAction = /[+-/*//%]/.test(value);
-    const hasFieldValue = /[0-9.,+-/*%//]/.test(value);
+    console.log("hasFieldAction", hasFieldAction);
+    const hasFieldValue = /[0-9\..,+-/*%//]/.test(value);
     // TODO add . and ,
     if(isTrusted) {
       if(value === 'Enter') {
@@ -34,10 +37,14 @@ function app() {
         return;
       }
       
+      resetValues(hasFieldAction);
       hasFieldValue && values.push({value, isAction: hasFieldAction});
       (value === 'Backspace') && clearField();
-      setSignIndex(hasFieldAction);
-      signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
+      console.log(values, value);
+      if(hasFieldValue) {
+        setSignIndex(hasFieldAction);
+        signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
+      }
     }
   })
 
@@ -62,6 +69,7 @@ const calculate = () => {
       case '%': answer = firstNumber % secondNumber; break;
     }
     setOutput(answer.toFixed(2));
+    hasBeenCalculated = true;
     resetVariables();
     [... answer.toString()].forEach(value => values.push({value, isAction: false}));
   } catch(errorMessage) {
@@ -75,7 +83,7 @@ const setOutput = values =>
   output.textContent = Array.isArray(values) ? values.filter( ({isAction}) => !isAction).map( ({value}) => value).join('') : values;
 
 const getComponenets = () => {
-  let index = 0;
+  let index = 0; 
 
   return values.reduce( (components, {value, isAction})  => {
     isAction ? ++index : (components[index] += value);
@@ -95,6 +103,12 @@ const setSignIndex = isExistSign => {
 const clearField = () => {
   setOutput('');
   resetVariables();
+}
+
+const resetValues = actionField => {
+  if(hasBeenCalculated && !actionField) 
+    values = [];
+  hasBeenCalculated = false;
 }
 
 
