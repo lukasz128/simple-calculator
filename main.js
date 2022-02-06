@@ -18,31 +18,38 @@ function app() {
       return;
     }
 
-    resetValues(hasFieldAction);   
-    values.push({value, isAction: hasFieldAction});
+    resetValues(hasFieldAction);
+    if((!signIndex && hasFieldAction) || !action) 
+      values.push({value, isAction: hasFieldAction});
+    else
+      values[values.length-1] = {value, isAction: hasFieldAction};
     (action === 'clear') && clearField();
     console.log(values);
     setSignIndex(hasFieldAction);
     signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
   });
 
-  const keyUpEventRef = window.addEventListener('keyup', ({key: value, isTrusted}) => {
-    const hasFieldAction = /[+-]|[//]|[/*]|[/%]{1}/.test(value);
-    const hasFieldValue = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(value);
+  const keyUpEventRef = window.addEventListener('keyup', ({key, isTrusted}) => {
+    const action = /[+-]|[//]|[/*]|[/%]|Backspace/.test(key);
+    const value = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(key);
+    const hasFieldAction = /[+-]|[//]|[/*]|[/%]{1}/.test(key);
     if(isTrusted) {
-      if(value === 'Enter') {
+      if(key === 'Enter') {
         calculate();
         return;
       }
-      
+
       resetValues(hasFieldAction);
-      hasFieldValue && values.push({value, isAction: hasFieldAction});
-      (value === 'Backspace') && clearField();
-      console.log(values, value);
-      if(hasFieldValue) {
+      (key === 'Backspace') && clearField();
+      if(value) {
+        if((!signIndex && hasFieldAction) || !action)
+          values.push({value: key, isAction: hasFieldAction});
+        else 
+          values[values.length-1] = {value: key, isAction: HashChangeEvent};
         setSignIndex(hasFieldAction);
         signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
       }
+      console.log(values, key);
     }
   })
 
