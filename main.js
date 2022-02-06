@@ -45,7 +45,7 @@ function app() {
         if((!signIndex && hasFieldAction) || !action)
           values.push({value: key, isAction: hasFieldAction});
         else 
-          values[values.length-1] = {value: key, isAction: HashChangeEvent};
+          values[values.length-1] = {value: key, isAction: hasFieldAction };
         setSignIndex(hasFieldAction);
         signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
       }
