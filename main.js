@@ -16,12 +16,12 @@ function app() {
     calculatorHandler({action, value, hasFieldAction});
   });
 
-  const keyUpEventRef = window.addEventListener('keyup', ({key}) => {
-    const action = /[+-]|[//]|[/*]|[/%]|Backspace/.test(key);
-    const hasCorrectValue = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(key);
-    const hasFieldAction = /[+-]|[//]|[/*]|[/%]{1}/.test(key);
+  const keyUpEventRef = window.addEventListener('keyup', ({key: value}) => {
+    const action = /[+-]|[//]|[/*]|[/%]|Backspace/.test(value);
+    const hasCorrectValue = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(value);
+    const hasFieldAction = /[+-]|[//]|[/*]|[/%]{1}/.test(value);
 
-    calculatorHandler({action, value: key, hasFieldAction, hasCorrectValue})
+    calculatorHandler({action, value, hasFieldAction, hasCorrectValue})
   })
 
   document.removeEventListener('submit', submitEventRef);
@@ -29,8 +29,9 @@ function app() {
 }
 
 const calculatorHandler = ({action, value, hasFieldAction, hasCorrectValue = true}) => {
+  const hasntDuplicateAction = ((!signIndex && hasFieldAction) || !action);
+
   if(action === 'calculate' || value === 'Enter') {
-    console.log("triggered");
     calculate();
     return;
   }
@@ -39,14 +40,10 @@ const calculatorHandler = ({action, value, hasFieldAction, hasCorrectValue = tru
   (action === 'clear' || value === 'Backspace') && clearField();
 
   if(hasCorrectValue) {
-    if((!signIndex && hasFieldAction) || !action)
-      values.push({value, isAction: hasFieldAction});
-    else 
-      values[values.length-1] = {value, isAction: hasFieldAction };
+    hasntDuplicateAction ? values.push({value, isAction: hasFieldAction}) : changeAction(value);
     setSignIndex(hasFieldAction);
     signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
   }
-  console.log(values, )
 }
 
 const calculate = () => {
@@ -107,5 +104,8 @@ const resetValues = actionField => {
     values = [];
   hasBeenCalculated = false;
 }
+
+const changeAction = newAction =>
+  values[values.length-1] = {value: newAction, isAction: true};
 
 document.removeEventListener('DOMContentLoaded', domEventRef);
