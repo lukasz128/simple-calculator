@@ -12,49 +12,41 @@ function app() {
     const action = event.submitter.dataset.action;
     const value = event.submitter.dataset.value;
     const hasFieldAction = (action !== undefined && action !== 'calculate' && action !== 'clear');
-    
-    if(action === 'calculate') {
-      calculate();
-      return;
-    }
 
-    resetValues(hasFieldAction);
-    if((!signIndex && hasFieldAction) || !action) 
-      values.push({value, isAction: hasFieldAction});
-    else
-      values[values.length-1] = {value, isAction: hasFieldAction};
-    (action === 'clear') && clearField();
-    console.log(values);
-    setSignIndex(hasFieldAction);
-    signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
+    calculatorHandler({action, value, hasFieldAction});
   });
 
-  const keyUpEventRef = window.addEventListener('keyup', ({key, isTrusted}) => {
+  const keyUpEventRef = window.addEventListener('keyup', ({key}) => {
     const action = /[+-]|[//]|[/*]|[/%]|Backspace/.test(key);
-    const value = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(key);
+    const hasCorrectValue = /[+-]|[//]|[/*]|[/%]|[0-9.,]+/.test(key);
     const hasFieldAction = /[+-]|[//]|[/*]|[/%]{1}/.test(key);
-    if(isTrusted) {
-      if(key === 'Enter') {
-        calculate();
-        return;
-      }
 
-      resetValues(hasFieldAction);
-      (key === 'Backspace') && clearField();
-      if(value) {
-        if((!signIndex && hasFieldAction) || !action)
-          values.push({value: key, isAction: hasFieldAction});
-        else 
-          values[values.length-1] = {value: key, isAction: hasFieldAction };
-        setSignIndex(hasFieldAction);
-        signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
-      }
-      console.log(values, key);
-    }
+    calculatorHandler({action, value: key, hasFieldAction, hasCorrectValue})
   })
 
   document.removeEventListener('submit', submitEventRef);
   document.removeEventListener('keyup', keyUpEventRef);
+}
+
+const calculatorHandler = ({action, value, hasFieldAction, hasCorrectValue = true}) => {
+  if(action === 'calculate' || value === 'Enter') {
+    console.log("triggered");
+    calculate();
+    return;
+  }
+
+  resetValues(hasFieldAction);
+  (action === 'clear' || value === 'Backspace') && clearField();
+
+  if(hasCorrectValue) {
+    if((!signIndex && hasFieldAction) || !action)
+      values.push({value, isAction: hasFieldAction});
+    else 
+      values[values.length-1] = {value, isAction: hasFieldAction };
+    setSignIndex(hasFieldAction);
+    signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
+  }
+  console.log(values, )
 }
 
 const calculate = () => {
@@ -115,6 +107,5 @@ const resetValues = actionField => {
     values = [];
   hasBeenCalculated = false;
 }
-
 
 document.removeEventListener('DOMContentLoaded', domEventRef);
