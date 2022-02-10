@@ -44,14 +44,15 @@ const calculatorHandler = ({action, value, hasFieldAction, hasCorrectValue = tru
     setSignIndex(hasFieldAction);
     signIndex ? setOutput(values.slice(signIndex)) : setOutput(values);  
   }
+  console.log(values);
 }
 
 const calculate = () => {
   try {
-    const action = values.find( ({isAction}) => isAction).value;
+    const action = values.find( ({isAction}) => isAction)?.value;
     const [firstNumber, secondNumber] = getComponenets();
     let answer;
-    // TODO exception when is only one number without action
+    
     switch(action) {
       case '+': answer = firstNumber + secondNumber; break;
       case '-': answer = firstNumber - secondNumber; break;
@@ -61,6 +62,7 @@ const calculate = () => {
         answer = firstNumber / secondNumber;
       } break;
       case '%': answer = firstNumber % secondNumber; break;
+      default: answer = firstNumber;
     }
     setOutput(answer.toFixed(2));
     hasBeenCalculated = true;
@@ -82,7 +84,7 @@ const getComponenets = () => {
   return values.reduce( (components, {value, isAction})  => {
     isAction ? ++index : (components[index] += value);
     return components;
-  }, ['', '']).map( component => Number.parseFloat(component));
+  }, ['', '']).map( component => component ? Number.parseFloat(component) : 0);
 }
 
 const resetVariables = () => {
